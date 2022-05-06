@@ -25,7 +25,7 @@ public class PauseGame : MonoBehaviour
 
     public void Resume()
     {
-        FindObjectOfType<AudioManager>().Play("Menu Pick");
+        FindObjectOfType<AudioManager>().Play("Menu Pick",0f);
         Time.timeScale = 1f;
         pauseMenu.SetActive(false);
         GameIsPaused = false;
@@ -40,11 +40,11 @@ public class PauseGame : MonoBehaviour
     }
     public void Settings()
     {
-        FindObjectOfType<AudioManager>().Play("Menu Pick");
+        FindObjectOfType<AudioManager>().Play("Menu Pick",0f);
     }
     public void Quit()
     {
-        FindObjectOfType<AudioManager>().Play("Menu Pick");
+        FindObjectOfType<AudioManager>().Play("Menu Pick",0f);
         Application.Quit();
     }
 

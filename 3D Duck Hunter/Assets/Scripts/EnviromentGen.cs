@@ -17,8 +17,8 @@ public class EnviromentGen : MonoBehaviour
 
     void Start()
     {
-        FindObjectOfType<AudioManager>().Play("Music");
-        FindObjectOfType<AudioManager>().Play("Forest Noise");
+        FindObjectOfType<AudioManager>().Play("Music",0f);
+        FindObjectOfType<AudioManager>().Play("Forest Noise",0f);
 
         //POI Generation--------------------------------------------------------------------------------------------------------------------------------------------------
         for (int i = 0; i < poiNum; i++)

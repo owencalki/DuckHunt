@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd237e7abe37d2438db6f42e8e38112, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  name: Shotgun
+  isAutomatic: 0
+  ammoSize: 8
+  ammoCount: 8
+  bulletSpread: 3
+  firingCoolDown: 1.9
+  crosshair: {fileID: 21300000, guid: e390161a117532c449964404705598f7, type: 3}
+  shootSound: Shotgun shot
+  pumpSound: Shotgun pump
+  reloadSound: 

@@ -10,33 +10,20 @@ public class PlayerController : MonoBehaviour
     public GameObject player; 
     public Camera cam;
     public float sensitivity;
-    public float range;
     float xRot = 0;
     float yRot = 0f;
     public bool isReloading = false;
     public int ammoCount = 8;
 
-    public float firingCoolDown;
-    float lastFire = 0f;
-    public float bulletSpread;
 
-    public ParticleSystem Shells;
-    public ParticleSystem Smoke;
-    public ParticleSystem Blast;
-
-    Ray ray;
-
+    GunManager gunManager;
 
 
     void Start()
     {
+        gunManager = FindObjectOfType<GunManager>();
         character = gameObject;
         animator = character.GetComponent<Animator>();
-        
-        //Updates Crosshair with bullet spread
-        RectTransform crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
-        //crosshair.sizeDelta = new Vector2(bulletSpread, bulletSpread) * 40;                   Commented Out But a Possiblity for scaling crosshair
-        //40 is a multiplier so that the crosshair matches the spread
     }
 
     void Update()
@@ -55,68 +42,9 @@ public class PlayerController : MonoBehaviour
         //--------------------------------------------------------------------------------------------------------------------------------
 
         //Shooting------------------------------------------------------------------------------------------------------------------------
-        if (Input.GetMouseButtonDown(0) && Time.time - lastFire > firingCoolDown && PauseGame.GameIsPaused == false && isReloading == false && ammoCount>0)
-        { 
-            Shoot(); 
-            lastFire = Time.time;
+        if (Input.GetMouseButton(0)) { gunManager.UseGun("shoot"); }
 
-            //sphere casting to see what colliders were hit. Using sphere for bullet spread
-            RaycastHit[] hit = Physics.SphereCastAll(cam.transform.position, bulletSpread, cam.transform.forward, range);
-            if (hit.Length > 0)
-            {
-                //Debug.Log(hit[0].collider.name);                                                                           Can be used for DEBUGING aiming
-                for (int i = 0; i < hit.Length; i++)
-                {
-                    if (hit[i].collider.gameObject.GetComponentInParent<duck>())
-                    {
-                        hit[i].collider.gameObject.GetComponentInParent<duck>().Shot();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-
-        int ammoNeeded = 8-ammoCount;
-        float t;
-
-        if (Input.GetKeyDown(KeyCode.R) && ammoCount != 8) 
-        {
-            isReloading = true;
-            animator.SetFloat("ReloadNum", ammoNeeded);
-            animator.SetTrigger("Reload");
-            ammoCount = 8;
-            t = Time.time;
-        }
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) { isReloading = true; }
-        else { isReloading = false; }
-
+        if (Input.GetKeyDown(KeyCode.R)) { gunManager.UseGun("reload"); }
 
     }
- 
-    void Shoot()    //Handles sounds and animations for shooting shotgun---------------------------------------------------------------
-    {
-        ammoCount -= 1;
-        Smoke.Play();
-        Blast.Play();
-        animator.SetTrigger("MouseDown");
-        StartCoroutine(ShootingSounds(false));
-    }
-    IEnumerator ShootingSounds(bool reloading)
-    {
-        if (!reloading)
-        {
-            FindObjectOfType<AudioManager>().Play("Shotgun shot");
-            yield return new WaitForSeconds(0.9f);
-            Shells.Play();
-            FindObjectOfType<AudioManager>().Play("Shotgun pump");
-        }
-        if(reloading)
-        {
-            //Add dryfire sound
-        }
-    }
-    //----------------------------------------------------------------------------------------------------------------------------------
 }

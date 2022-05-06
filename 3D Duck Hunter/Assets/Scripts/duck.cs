@@ -73,7 +73,7 @@ public class duck : MonoBehaviour
 
     public void Shot()
     {
-        FindObjectOfType<AudioManager>().Play("Quack "+Mathf.Round(Random.Range(1f,3f)));
+        FindObjectOfType<AudioManager>().Play("Quack "+Mathf.Round(Random.Range(1f,3f)),0f);
         Blood.Play();
         EnableRagdoll();
 

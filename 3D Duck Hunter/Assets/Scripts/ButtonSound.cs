@@ -5,6 +5,6 @@ public class ButtonSound : MonoBehaviour, IPointerEnterHandler
     // When highlighted with mouse.
     public void OnPointerEnter(PointerEventData eventData)
     {
-        FindObjectOfType<AudioManager>().Play("Menu Scroll");
+        FindObjectOfType<AudioManager>().Play("Menu Scroll",0f);
     }
 }
