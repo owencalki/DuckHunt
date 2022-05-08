@@ -17,5 +17,7 @@ public class GunCreator : ScriptableObject
     public string shootSound;
     public string pumpSound;
     public string reloadSound;
+    public GameObject ammoSprite;
+    public string emptySound;
 
 }

@@ -15,10 +15,12 @@ MonoBehaviour:
   name: Shotgun
   isAutomatic: 0
   ammoSize: 8
-  ammoCount: 8
+  ammoCount: 0
   bulletSpread: 3
   firingCoolDown: 1.9
   crosshair: {fileID: 21300000, guid: e390161a117532c449964404705598f7, type: 3}
   shootSound: Shotgun shot
   pumpSound: Shotgun pump
-  reloadSound: 
+  reloadSound: Load Shell
+  ammoSprite: {fileID: 4352187672482531125, guid: 416ff7bcccbbda747aff9c915854d42c, type: 3}
+  emptySound: Dry Fire

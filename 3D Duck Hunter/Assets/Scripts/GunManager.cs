@@ -10,9 +10,21 @@ public class GunManager : MonoBehaviour
     public GameObject player;
     public GunCreator[] guns;
     public GunCreator equipedGun;
+    public GameObject ammoPanel;
+    public List<GameObject> ammoImages;
     float lastFired = 0;
 
+    private void Start()
+    {
+        equipedGun.ammoCount = equipedGun.ammoSize;
+        ammoPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(25*equipedGun.ammoSize,65);
 
+        ammoImages = new List<GameObject>();
+        for (int i = 0; i < equipedGun.ammoCount; i++)
+        {
+            ammoImages.Add(Instantiate(equipedGun.ammoSprite, ammoPanel.transform));
+        }
+    }
     public void UseGun(string action)
     {
     //IF CALLED ACTION IS TO SHOOT A GUN
@@ -44,6 +56,9 @@ public class GunManager : MonoBehaviour
      {
         if (equipedGun.ammoCount > 0 && Time.time-lastFired>equipedGun.firingCoolDown && PauseGame.GameIsPaused==false && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
+
+            ammoImages[equipedGun.ammoSize-equipedGun.ammoCount].SetActive(false);
+
             lastFired = Time.time;
             animator.SetTrigger("Shoot_" + equipedGun.name);
             FindObjectOfType<AudioManager>().Play(equipedGun.shootSound,0f);
@@ -66,18 +81,29 @@ public class GunManager : MonoBehaviour
                 }
             }
         }
+        else if (equipedGun.ammoCount == 0) { FindObjectOfType<AudioManager>().Play(equipedGun.emptySound,.1f); }
      }
     
     void Reload()
     {
         if (equipedGun.ammoCount < equipedGun.ammoSize && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
-            Debug.Log("RELOADING");
+            
             animator.SetFloat("ReloadNum_"+equipedGun.name, equipedGun.ammoSize - equipedGun.ammoCount);
             animator.SetTrigger("Reload_" + equipedGun.name);
+            StartCoroutine(LoadSounds(equipedGun.ammoSize-equipedGun.ammoCount));
             equipedGun.ammoCount = equipedGun.ammoSize;
-
-
+        }
+    }
+    IEnumerator LoadSounds(int reloadTimes)
+    {
+        yield return new WaitForSeconds(0.55f);
+        for (int i = 0; i < reloadTimes; i++)
+        {
+            ammoImages[i].SetActive(true);
+            Debug.Log("reload sound");
+            FindObjectOfType<AudioManager>().Play(equipedGun.reloadSound,0);
+            yield return new WaitForSeconds(.45f);
         }
     }
 }
