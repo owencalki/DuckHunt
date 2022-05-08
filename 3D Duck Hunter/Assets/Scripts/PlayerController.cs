@@ -12,8 +12,6 @@ public class PlayerController : MonoBehaviour
     public float sensitivity;
     float xRot = 0;
     float yRot = 0f;
-    public bool isReloading = false;
-    public int ammoCount = 8;
 
 
     GunManager gunManager;

@@ -13,6 +13,7 @@ public class GunManager : MonoBehaviour
     public GameObject ammoPanel;
     public List<GameObject> ammoImages;
     float lastFired = 0;
+    GameObject hitObject;
 
     private void Start()
     {
@@ -62,7 +63,7 @@ public class GunManager : MonoBehaviour
             lastFired = Time.time;
             animator.SetTrigger("Shoot_" + equipedGun.name);
             FindObjectOfType<AudioManager>().Play(equipedGun.shootSound,0f);
-            FindObjectOfType<AudioManager>().Play(equipedGun.pumpSound, 0.9f);
+            StartCoroutine(PumpTime());
             equipedGun.ammoCount -= 1;
             RaycastHit[] hit = Physics.SphereCastAll(cam.transform.position, equipedGun.bulletSpread, cam.transform.forward, 300);
             if (hit.Length > 0)
@@ -70,20 +71,29 @@ public class GunManager : MonoBehaviour
                 //Debug.Log(hit[0].collider.name);                                                                           Can be used for DEBUGING aiming
                 for (int i = 0; i < hit.Length; i++)
                 {
-                    if (hit[i].collider.gameObject.GetComponentInParent<duck>())
+                    hitObject = hit[i].collider.gameObject;
+                    Debug.Log(hitObject.name);
+                    if (hitObject.CompareTag("Shootable"))
                     {
-                        hit[i].collider.gameObject.GetComponentInParent<duck>().Shot();
-                    }
-                    else
-                    {
-                        return;
+                        if(hitObject.GetComponentInParent<duck>())
+                        {
+                            hitObject.GetComponentInParent<duck>().Shot();
+                        }
+                        else if(hitObject.name=="Melon")
+                        {
+                            hitObject.GetComponent<Melon>().HitMelon();
+                        }
                     }
                 }
             }
         }
         else if (equipedGun.ammoCount == 0) { FindObjectOfType<AudioManager>().Play(equipedGun.emptySound,.1f); }
      }
-    
+    IEnumerator PumpTime()
+    {
+        yield return new WaitForSeconds(1.2f);
+        FindObjectOfType<AudioManager>().Play(equipedGun.pumpSound,0f);
+    }
     void Reload()
     {
         if (equipedGun.ammoCount < equipedGun.ammoSize && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))

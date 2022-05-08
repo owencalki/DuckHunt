@@ -5,6 +5,7 @@ using System;
 public class AudioManager : MonoBehaviour{
 
     public Sound[] sounds;
+    public float timeScale;
 
 
     void Awake()
@@ -25,7 +26,6 @@ public class AudioManager : MonoBehaviour{
         Sound s =Array.Find(sounds, sound => sound.name == name);
 
         if (s == null) { Debug.LogWarning("Sound" + name + "was not found!"); return; }
-
         s.source.PlayDelayed(delay);
     }
 }
