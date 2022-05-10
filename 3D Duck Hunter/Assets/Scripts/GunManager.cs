@@ -68,18 +68,17 @@ public class GunManager : MonoBehaviour
             RaycastHit[] hit = Physics.SphereCastAll(cam.transform.position, equipedGun.bulletSpread, cam.transform.forward, 300);
             if (hit.Length > 0)
             {
-                //Debug.Log(hit[0].collider.name);                                                                           Can be used for DEBUGING aiming
                 for (int i = 0; i < hit.Length; i++)
                 {
                     hitObject = hit[i].collider.gameObject;
-                    Debug.Log(hitObject.name);
+                    //Debug.Log(hitObject.name);
                     if (hitObject.CompareTag("Shootable"))
                     {
                         if(hitObject.GetComponentInParent<duck>())
                         {
                             hitObject.GetComponentInParent<duck>().Shot();
                         }
-                        else if(hitObject.name=="Melon")
+                        else if(hitObject.GetComponentInParent<Melon>())
                         {
                             hitObject.GetComponent<Melon>().HitMelon();
                         }
@@ -89,14 +88,18 @@ public class GunManager : MonoBehaviour
         }
         else if (equipedGun.ammoCount == 0) { FindObjectOfType<AudioManager>().Play(equipedGun.emptySound,.1f); }
      }
+    bool isPumping;
     IEnumerator PumpTime()
     {
+        isPumping = true;
         yield return new WaitForSeconds(1.2f);
         FindObjectOfType<AudioManager>().Play(equipedGun.pumpSound,0f);
+        yield return new WaitForSeconds(1);
+        isPumping = false;
     }
     void Reload()
     {
-        if (equipedGun.ammoCount < equipedGun.ammoSize && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        if (equipedGun.ammoCount < equipedGun.ammoSize && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !isPumping)
         {
             
             animator.SetFloat("ReloadNum_"+equipedGun.name, equipedGun.ammoSize - equipedGun.ammoCount);
@@ -111,7 +114,6 @@ public class GunManager : MonoBehaviour
         for (int i = 0; i < reloadTimes; i++)
         {
             ammoImages[i].SetActive(true);
-            Debug.Log("reload sound");
             FindObjectOfType<AudioManager>().Play(equipedGun.reloadSound,0);
             yield return new WaitForSeconds(.45f);
         }

@@ -47,14 +47,14 @@ public class duck : MonoBehaviour
     {
         if (alive == true && PauseGame.GameIsPaused==false)
         {
-            if (targets.Count == 0) { Destroy(gameObject); return; } //Destroys Duck if theres no target to go to
+            if (targets.Count == 0) { Destroy(gameObject); FindObjectOfType<GameOver>().GameIsOver(); } //Destroys Duck if theres no target to go to
 
             else if (Vector3.Distance(transform.position, NearestTarget(targets).transform.position) < targetClosenessMultipler) //Removes nearest target from list if at targets location
             { targets.Remove(NearestTarget(targets)); }
 
             else if (Vector3.Distance(transform.position, NearestTarget(targets).transform.position) != 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, NearestTarget(targets).transform.position, moveSpeed*randomSpeedMultiplier);
+                transform.position = Vector3.MoveTowards(transform.position, NearestTarget(targets).transform.position, moveSpeed*randomSpeedMultiplier*Time.deltaTime);
 
                 if (NearestTarget(targets).transform.position-transform.position!=Vector3.zero)
                 { transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(NearestTarget(targets).transform.position - transform.position), Time.deltaTime * 5f); }
@@ -76,7 +76,6 @@ public class duck : MonoBehaviour
         FindObjectOfType<AudioManager>().Play("Quack "+Mathf.Round(Random.Range(1f,3f)),0f);
         Blood.Play();
         EnableRagdoll();
-
         alive = false;
         Destroy(gameObject, 15f);
     }
